@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Three.js Skybox</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script>
+        var scene, camera, renderer, skyboxGeo, skybox;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            const loader = new THREE.TextureLoader();
+            const materialArray = [
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_ft.jpg') }),
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_bk.jpg') }),
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_up.jpg') }),
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_dn.jpg') }),
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_rt.jpg') }),
+                new THREE.MeshBasicMaterial({ map: loader.load('texture/arid2_lf.jpg') }),
+            ];
+            for (let i = 0; i < 6; i++)
+                materialArray[i].side = THREE.BackSide;
+            skyboxGeo = new THREE.BoxGeometry(20, 20, 20);
+            skybox = new THREE.Mesh(skyboxGeo, materialArray);
+            scene.add(skybox);
+
+            animate();
+        }
+
+        function animate() {
+            skybox.rotation.x += 0.005;
+            skybox.rotation.y += 0.005;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        init();
+    </script>
+</body>
+</html>
